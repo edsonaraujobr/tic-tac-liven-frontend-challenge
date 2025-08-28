@@ -1,15 +1,10 @@
-/**
- * Obs: O controle de estado principal da aplicação deve ser mantido neste hook
- */
-
 import { useState } from "react";
+import { GameState, Player, Square } from "../models/player.model";
 
-type Player = "X" | "O";
-
-const useGameState = () => {
+const useGameState = (): GameState => {
   const [stepNumber, setStepNumber] = useState(0);
   const [nextPlayer, setNextPlayer] = useState<Player>("X");
-  const [currentBoard, setCurrentBoard] = useState<(Player | null)[]>(
+  const [currentBoard, setCurrentBoard] = useState<(Square | null)[]>(
     Array(9).fill(null)
   );
 

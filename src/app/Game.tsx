@@ -1,4 +1,5 @@
-import useGameState from "./useGameState";
+import { useState } from "react";
+import useGameState from "../hooks/use-game-state.hooks";
 
 function calculateWinner(squares: any) {
   const lines = [
@@ -63,13 +64,18 @@ const Board = ({ squares, onSquareClick }: any) => {
 const Game: React.FC = () => {
   const { currentBoard, stepNumber, nextPlayer, computeMove, resetGame } =
     useGameState();
+  const [message, setMessage] = useState("");
 
   const handleSquareClick = (squareId: number) => {
-    if (calculateWinner(currentBoard) || currentBoard[squareId]) {
-      // Game over or square already handled
+    if (calculateWinner(currentBoard) || stepNumber === 9) {
       resetGame();
       return;
     }
+    if (currentBoard[squareId] && stepNumber !== 9) {
+      setMessage("This square already chosen.");
+      return;
+    }
+    setMessage("");
     computeMove(nextPlayer, squareId);
   };
 
@@ -78,15 +84,15 @@ const Game: React.FC = () => {
     if (winner) {
       return (
         <>
-          Winner: {winner}. <br />
-          Click any square to reset game.
+          {" "}
+          Winner: {winner}. <br /> Click any square to start new game.{" "}
         </>
       );
     } else if (stepNumber === 9) {
       return (
         <>
-          Draw: Game over. <br />
-          Click any square to reset game.
+          {" "}
+          Draw: Game over. <br /> Click any square to start new game.{" "}
         </>
       );
     } else {
@@ -109,6 +115,7 @@ const Game: React.FC = () => {
         <div className="game-info">
           <div>Current step: {stepNumber}</div>
           <div>{renderStatusMessage()}</div>
+          {message && <div style={{ color: "red" }}>{message}</div>}
         </div>
       </div>
     </>
