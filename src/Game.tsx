@@ -61,12 +61,13 @@ const Board = ({ squares, onSquareClick }: any) => {
 };
 
 const Game: React.FC = () => {
-  const { currentBoard, stepNumber, nextPlayer, computeMove } =
-    useGameState("X");
+  const { currentBoard, stepNumber, nextPlayer, computeMove, resetGame } =
+    useGameState();
 
   const handleSquareClick = (squareId: number) => {
     if (calculateWinner(currentBoard) || currentBoard[squareId]) {
       // Game over or square already handled
+      resetGame();
       return;
     }
     computeMove(nextPlayer, squareId);
@@ -75,11 +76,21 @@ const Game: React.FC = () => {
   const renderStatusMessage = () => {
     const winner = calculateWinner(currentBoard);
     if (winner) {
-      return "Winner: " + winner;
+      return (
+        <>
+          Winner: {winner}. <br />
+          Click any square to reset game.
+        </>
+      );
     } else if (stepNumber === 9) {
-      return "Draw: Game over";
+      return (
+        <>
+          Draw: Game over. <br />
+          Click any square to reset game.
+        </>
+      );
     } else {
-      return "Next player: " + (nextPlayer === "X" ? "❌" : "⭕");
+      return <>Next player: {nextPlayer === "X" ? "❌" : "⭕"}</>;
     }
   };
 
